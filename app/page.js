@@ -1,9 +1,7 @@
 
 "use client"
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import axios from 'axios'
-
-
 
 export default function Home() {
   const [fullname,setFullName]= useState("");
@@ -12,15 +10,30 @@ export default function Home() {
   const [gender,setGender] = useState("")
   const [ecb,setEVB] = useState("")
   const [he,setHE] = useState("")
+  const [message,setMessage] = useState("")
 
   const data = {
     fullname,email,phonenumber,gender,ecb,he
   }
 
 const registerUser = async()=>{
-    await axios.post('http://localhost:8080/api/users/postUser',data)
+    await axios.post('http://localhost:8080/api/users/postUser',data).then(res => setMessage(res.data))
+
     }
 
+const Alert=()=>{
+alert(message)
+}
+
+const fetchUser = async()=>{
+await axios.get("http://localhost:8080/api/users").then(res=>console.log(res.data))
+}
+
+useEffect(
+()=>{
+fetchUser()
+}
+,[message])
 
   return (
  <main style={{height:"100vh"}} className="flex flex-row align-center   w-full items-center justify-center gap-3  ">
@@ -63,7 +76,7 @@ const registerUser = async()=>{
   </div>
 
 <div className="flex justify-center ">
-  <button onClick={()=>{registerUser()}} className=" self-center text-[1.4em]  bg-[#7AE582] text-[white] px-10">Register</button>
+  <button onClick={()=>{registerUser();Alert()}} className=" self-center text-[1.4em]  bg-[#7AE582] text-[white] px-10">Register</button>
 </div>
   </div>
 
